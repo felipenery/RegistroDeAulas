@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Registro de Aulas</string>
+    <string name="string_initRecordButton">Iniciar gravação</string>
+    <string name="string_viewHostRecordButton">Gravação compartilhada</string>
+    <string name="string_viewRecordsButton">Recuperar gravação</string>
+    <string name="string_recordAudioButton">Gravar Áudio</string>
+    <string name="string_recordVideoButton">Gravar Vídeo</string>
+    <string name="string_JoinRoomButton">Entrar em uma sala existente</string>
+    <string name="string_NewRoomButton">Criar uma nova sala</string>
+    <string name="action_info">Informações da tela</string>
+    <string name="action_welcome">Tela de Boas Vindas</string>
+    <string name="action_settings">Configurações</string>
+    <string name="action_legal">Informações legais</string>
+    <string name="action_libras">Informações em LIBRAS</string>
+</resources>

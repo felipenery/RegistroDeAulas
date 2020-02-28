@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="gravacoes">
+        <item>Anotação 1</item>
+        <item>Anotação 2</item>
+        <item>Anotação 3</item>
+        <item>Anotação 4</item>
+    </string-array>
+</resources>

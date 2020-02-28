@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dot_marker"
+    android:width="7dp"
+    android:height="21dp"
+    android:viewportWidth="60"
+    android:viewportHeight="300">
+    <group android:name="rotationGroup">
+        <path
+            android:name="v"
+            android:fillColor="#22AA00"
+            android:pathData="M0,0 l 60,0 -5,50 -15,00
+                 -8,50 0,70 8,50
+                 15,0 5,50 -60,0 5,-50 15,0
+                8,-50 0,-70 -8,-50
+                -15,0z" />
+    </group>
+</vector>
