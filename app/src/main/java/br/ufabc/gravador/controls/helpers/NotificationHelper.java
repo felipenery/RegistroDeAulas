@@ -95,9 +95,9 @@ public class NotificationHelper {
                         isPlaying ? "Pausar" : "Reproduzir",
                         buildGravacaoServiceButtonPendingIntent(GravacaoService.ACTION_PLAY_PAUSE))
                 .addAction(
-                        android.R.drawable.ic_media_previous,
+                        android.R.drawable.ic_media_next,
                         "Próxima Marcação",
-                        buildGravacaoServiceButtonPendingIntent(GravacaoService.ACTION_PREV))
+                        buildGravacaoServiceButtonPendingIntent(GravacaoService.ACTION_NEXT))
                 .setAutoCancel(false);
         return notification.build();
     }
@@ -110,6 +110,16 @@ public class NotificationHelper {
                 .setContentText("Toque para editar a gravação") //TODO hardcoded
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
+                .setAutoCancel(false);
+        return notification.build();
+    }
+
+    public Notification newBlankNotification () {
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(context,
+                CHANNEL_DEFAULT_IMPORTANCE)
+                .setSmallIcon(R.drawable.ic_launcher_background)//TODO
+                .setContentTitle("Registro de Aulas está aberto") //TODO hardcoded
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setAutoCancel(false);
         return notification.build();
     }
