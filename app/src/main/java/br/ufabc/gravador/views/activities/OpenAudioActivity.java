@@ -19,7 +19,6 @@ import androidx.appcompat.app.AlertDialog;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -312,16 +311,13 @@ public class OpenAudioActivity extends AbstractMenuActivity
 
             List<Integer> lTimes = Arrays.stream(times)
                     .filter(x -> isNext ? x > playTime : x < playTime)
+                    .sorted()
                     .boxed()
                     .collect(Collectors.toList());
 
-            if ( lTimes.isEmpty() ) {
-                time = isNext ? mediaPlayer.getDuration() : 0;
-            } else {
-                if ( isNext ) Collections.sort(lTimes);
-                else Collections.sort(lTimes, Collections.reverseOrder());
-                time = lTimes.get(0);
-            }
+            time = lTimes.isEmpty() ?
+                    isNext ? mediaPlayer.getDuration() : 0 :
+                    isNext ? lTimes.get(0) : lTimes.get(lTimes.size() - 1);
 
             return jumpTo(gravacao, time);
         }

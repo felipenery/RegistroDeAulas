@@ -21,6 +21,10 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import br.ufabc.gravador.R;
 import br.ufabc.gravador.models.Gravacao;
 
@@ -31,7 +35,7 @@ public class AnnotationsFragment extends Fragment {
 
     private Spinner annotationsSelector;
     private EditText annotationContent, annotationName;
-    private ImageButton annotationNewButton, annotationTakePicture;
+    private ImageButton annotationNewButton, annotationTakePicture, annotationDelete;
     private Button annotationSave;
     private TextView annotationTime;
     private BaseAdapter adapter;
@@ -204,6 +208,14 @@ public class AnnotationsFragment extends Fragment {
             }
         });
 
+        annotationDelete = master.findViewById(R.id.annotationDelete);
+        annotationDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick ( View view ) {
+                deleteOnClick();
+            }
+        });
+
         annotationTime = master.findViewById(R.id.annotationTime);
 
         gravacao = activityListener.getGravacao();
@@ -301,6 +313,22 @@ public class AnnotationsFragment extends Fragment {
         gravacao.setAnnotationText(selectedID, annotationContent.getText().toString());
         adapter.notifyDataSetChanged();
         hasTextChanged = false;
+    }
+
+    public void deleteOnClick () {
+        final int time = gravacao.getAnnotation(selectedID).getTime();
+        gravacao.deleteAnnotation(selectedID);
+
+        int[] times = gravacao.getAnnotationTimes();
+
+        List<Integer> lTimes = Arrays.stream(times)
+                .filter(x -> x < time)
+                .sorted()
+                .boxed()
+                .collect(Collectors.toList());
+
+        hasTextChanged = false;
+        jumpToTime(lTimes.isEmpty() ? 0 : lTimes.get(lTimes.size() - 1));
     }
 
     public void newButtonOnClick () {

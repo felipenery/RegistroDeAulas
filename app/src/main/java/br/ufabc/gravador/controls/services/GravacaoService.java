@@ -3,6 +3,7 @@ package br.ufabc.gravador.controls.services;
 import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Binder;
 import android.os.Handler;
@@ -31,7 +32,16 @@ public class GravacaoService extends Service {
     private NotificationHelper notificationHelper;
     private Gravacao gravacao;
     private MediaRecorder recorder;
+    private MediaPlayer player;
     private MyFileManager fileManager;
+
+    /*
+     * TIME-LOGIC BLOCK
+     */
+
+    public interface TimeUpdateListener {
+        void onTimeUpdate ( long time );
+    }
     private TimeUpdateListener registeredTimeListener;
     private long currentTime = 0, runnableStartTime = 0;
     private Handler timeHandler = new Handler();
@@ -57,11 +67,11 @@ public class GravacaoService extends Service {
 
     private void stopTimer () { timeHandler.removeCallbacks(timeRunnable); }
 
-    /**
+    /*
      * END TIME-LOGIC
      */
 
-    /**
+    /*
      * LIFECYCLE-LOGIC BLOCK
      */
 
@@ -106,8 +116,12 @@ public class GravacaoService extends Service {
         stopTimer();
     }
 
-    /**
+    /*
      * END LIFECYCLE-LOGIC
+     */
+
+    /*
+     *  RECORD-LOGIC BLOCK
      */
 
     public void setGravacao ( Gravacao gravacao ) {
@@ -170,6 +184,7 @@ public class GravacaoService extends Service {
     }
 
     private void onRecordStarted () {
+        startTimer(0);
         startForeground(
                 NOTIFICATION_ID,
                 notificationHelper.newRecordAudioNotification(
@@ -188,6 +203,7 @@ public class GravacaoService extends Service {
     }
 
     private void onRecordStopped () {
+        stopTimer();
         notificationHelper.pushNotification(
                 NOTIFICATION_ID,
                 notificationHelper.newRecordAudioNotification(
@@ -196,6 +212,106 @@ public class GravacaoService extends Service {
         serviceStatus = STATUS_WAITING_SAVE;
     }
 
+    /*
+     * END RECORD-LOGIC
+     */
+
+
+    //TODO continuarDaqui
+    /*
+
+        private boolean configPlayer ( Gravacao gravacao ) {
+            if ( mediaPlayer == null )
+                mediaPlayer = new MediaPlayer();
+            else
+                mediaPlayer.reset();
+
+            try {
+                mediaPlayer.setDataSource(gravacao.getFilePath());
+                mediaPlayer.setLooping(false);
+                mediaPlayer.prepare();
+                isPrepared = true;
+            } catch ( IllegalArgumentException | IOException e ) {
+                e.printStackTrace();
+                Toast.makeText(null, "Falha em iniciar gravação", Toast.LENGTH_LONG).show();
+                stopPlaying();
+                return false;
+            }
+            return true;
+        }
+
+        private boolean startStopPlaying ( Gravacao gravacao, boolean playPause ) {
+            if ( mediaPlayer == null || !isPrepared )
+                if ( !configPlayer(gravacao) ) return false;
+
+            try {
+                if ( playPause )
+                    mediaPlayer.start();
+                else
+                    mediaPlayer.pause();
+
+            } catch ( IllegalStateException e ) {
+                Log.e("AudioPlayer", "bad state", e);
+                stopPlaying();
+                return false;
+            }
+            return true;
+        }
+
+        private int jumpTo ( Gravacao gravacao, int time ) {
+            if ( mediaPlayer == null || !isPrepared )
+                if ( !configPlayer(gravacao) )
+                    return 0;
+
+            mediaPlayer.seekTo(time);
+            this.playTime = time;
+            return time;
+        }
+
+        private int nextPrev ( Gravacao gravacao, boolean isNext ) {
+            if ( mediaPlayer == null || !isPrepared )
+                if ( !configPlayer(gravacao) ) return 0;
+
+            int time, playTime = this.playTime;
+            int[] times = gravacao.getAnnotationTimes();
+
+            List<Integer> lTimes = Arrays.stream(times)
+                    .filter(x -> isNext ? x > playTime : x < playTime)
+                    .sorted()
+                    .boxed()
+                    .collect(Collectors.toList());
+
+           time = lTimes.isEmpty() ?
+                   isNext ? mediaPlayer.getDuration() : 0 :
+                   isNext ? lTimes.get(0) : lTimes.get(lTimes.size()-1);
+
+           return jumpTo(gravacao, time);
+        }
+
+        private void stopPlaying () {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+            isPrepared = false;
+        }
+
+        void startTimer () {
+            timeHandler.postDelayed(timeRunnable, 0);
+        }
+
+        void stopTimer () { timeHandler.removeCallbacks(timeRunnable); }
+
+        // --- END TIME ---
+
+        @Override
+        public void onDestroy () {
+            super.onDestroy();
+            if ( mediaPlayer != null ) stopPlaying();
+            if ( timeHandler != null ) stopTimer();
+        }
+    }
+
+     */
     private void goForeground () {
         Notification n = null;
         if ( serviceStatus == STATUS_WAITING_SAVE )
@@ -210,30 +326,6 @@ public class GravacaoService extends Service {
         if ( n != null )
             notificationHelper.pushNotification(0, null);//TODO REDO
     }
-
-    /**
-     * TIME-LOGIC BLOCK
-     */
-
-    public interface TimeUpdateListener {
-        void onTimeUpdate ( long time );
-    }
-    /*
-    public static class AudioRecordRetainedFragment extends AbstractMenuActivity.RetainedFragment {
-        //TODO Continuar daqui
-
-
-        // --- END TIME ---
-
-        @Override
-        public void onDestroy () {
-            super.onDestroy();
-            if ( recorder != null ) stopRecording();
-            if ( timeHandler != null ) stopTimer();
-        }
-    }
-
-     */
 
     public class LocalBinder extends Binder {
         GravacaoService getService () { return GravacaoService.this; }
