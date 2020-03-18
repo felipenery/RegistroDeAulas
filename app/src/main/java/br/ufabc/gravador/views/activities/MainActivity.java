@@ -7,17 +7,26 @@ import android.view.View;
 import android.widget.Button;
 
 import br.ufabc.gravador.R;
-
+// alterei as linhas 14,15,22, 25,26,27, 28. Tem que dar um extends na classe ConfigAll que é a classe abstract que voce pediu.
 public class MainActivity extends AbstractMenuActivity {
 
     Button initRecord, joinHostRecord, viewRecords;
+    private ConstraintLayout tela;
+    private int corTela;
 
     @SuppressLint( "MissingSuperCall" )
     @Override
     protected void onCreate ( Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState, R.layout.activity_main, R.id.my_toolbar, false, null);
 
+        tela = (ConstraintLayout) findViewById(R.id.layoutId);
         initRecord = findViewById(R.id.initRecord);
+        
+        if(sharedPreferences.getInt(KEY_COR_TELA, corTela) != 0) {
+            corTela = sharedPreferences.getInt(KEY_COR_TELA, corTela);
+            linearLayout.setBackgroundColor(corTela);
+        }
+        
         initRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick ( View view ) {
