@@ -7,9 +7,11 @@ import android.view.View;
 import android.widget.Button;
 
 import br.ufabc.gravador.R;
-
+// precisa dar um extends na classe AbstractConfigAllActivity
+//alterei as linhas "14","22","24","25","26""35","43" 
 public class MainActivity extends AbstractMenuActivity {
 
+    ConstraintLayout layout;
     Button initRecord, joinHostRecord, viewRecords;
 
     @SuppressLint( "MissingSuperCall" )
@@ -17,7 +19,11 @@ public class MainActivity extends AbstractMenuActivity {
     protected void onCreate ( Bundle savedInstanceState ) {
         super.onCreate(savedInstanceState, R.layout.activity_main, R.id.my_toolbar, false, null);
 
+        layout = findViewById(R.id.layoutId);
         initRecord = findViewById(R.id.initRecord);
+        calligrapher.setFont(this, fonte(), true);
+        layout.setBackgroundColor(corTela());
+        initRecord.setTextColor(corTexto());
         initRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick ( View view ) {
@@ -26,6 +32,7 @@ public class MainActivity extends AbstractMenuActivity {
         });
 
         joinHostRecord = findViewById(R.id.joinHostRecord);
+        joinHostRecord.setTextColor(corTexto());
         joinHostRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick ( View view ) {
@@ -33,6 +40,7 @@ public class MainActivity extends AbstractMenuActivity {
             }
         });
         viewRecords = findViewById(R.id.viewRecords);
+        viewRecords.setTextColor(corTexto());
         viewRecords.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick ( View view ) {
